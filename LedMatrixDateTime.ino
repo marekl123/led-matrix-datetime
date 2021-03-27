@@ -66,6 +66,95 @@ void IRAM_ATTR display_updater(){
 }
 #endif
 
+const String numberMatrix[14][2] = {
+    {"1000", "M"},
+    {"900", "CM"},
+    {"500", "D"},
+    {"400", "CD"},
+    {"100", "C"},
+    {"90", "XC"},
+    {"50", "L"},
+    {"40", "XL"},
+    {"10", "X"},
+    {"9", "IX"},
+    {"5", "V"},
+    {"4", "IV"},
+    {"1", "I"},
+    {"0", ""}
+};
+
+const int atariMatrix[21][29] = {
+   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+   { 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
+   { 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
+   { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0 },
+   { 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0 },
+   { 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0 },
+   { 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0 },
+   { 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0 },
+   { 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0 },
+   { 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0 }
+};
+
+
+String toRoman(int number) {
+    int index = 0;
+    String output = "";
+    while (floor(number) < 13) {
+        index = floor(number);
+        output += numberMatrix[index][1];
+        number -= numberMatrix[index][0].toInt();
+    }
+    return output;
+}
+
+int floor(int number) {
+    int index = 0;
+    for (index; index < 14; index++) {
+        if (numberMatrix[index][0].toInt() <= number) {
+            return index;
+        }
+    }
+    return index;
+}
+
+String getRomanDate(int part = 0) {
+  
+  DateTimeParts p = DateTime.getParts();
+  String romanDate;
+
+  if (part == 0) {
+    romanDate = toRoman(p.getYear());
+  }
+  else {
+    romanDate = toRoman(p.getMonth() + 1) + toRoman(p.getMonthDay());    
+  }
+
+  return romanDate;
+}
+
+void drawAtariLogo() {
+
+  for (int x=0; x<29;x++)
+  {
+    for (int y=0; y<21;y++)
+    {
+      if (atariMatrix[y][x] == 1)
+      display.drawPixel(x + 17, y + 27, RED);
+    }
+  }  
+}
 
 void setup() {
 
@@ -131,13 +220,28 @@ void setupDateTime() {
 
 void loop() {
 
+  String s;
+  int center;
   display.clearDisplay();
-  display.setTextColor(GREEN);
-  display.setCursor(2,18);
-  display.print(DateTime.format(DateFormatter::DATE_ONLY));
-  display.setTextColor(RED);
-  display.setCursor(8,38);
-  display.print(DateTime.format(DateFormatter::TIME_ONLY));
   
+  display.setTextColor(YELLOW);
+  display.setTextSize(1);
+  s = getRomanDate();
+  center = 32 - ((s.length() * 6) / 2);
+  display.setCursor(center , 5);
+  display.print(s);
+
+  display.setTextSize(0);
+  display.setTextColor(GREEN);
+  s = getRomanDate(1);
+  center = 32 - ((s.length() * 6) / 2);
+  display.setCursor(center,16);
+  display.print(s);
+
+  display.setTextColor(MAGENTA);
+  display.setCursor(8,52);
+  display.print(DateTime.format(DateFormatter::TIME_ONLY));
+
+  drawAtariLogo();
   delay(100);
 }
